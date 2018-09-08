@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <sched.h>
 
-#define BILLION 1000000000L
+#define BILLION 1000L
 using namespace std;
 
 int localpid(void) {
@@ -23,9 +23,9 @@ int localpid(void) {
 
 int main(int argc, char **argv)
 {
-    uint64_t diff, diff2;
+    uint32_t diff, diff2;
     struct timespec start, end, cpu_start, cpu_end;
-    uint64_t i, j, count;
+    uint32_t i, j, count;
     int cpu;
 
     count = 0;
@@ -35,8 +35,8 @@ int main(int argc, char **argv)
     clock_gettime(CLOCK_MONOTONIC, &start); /* mark start time */
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &cpu_start);    /* mark start time */
 
-    for (i = 0; i < 199999; i++)
-        for (j = 0; j < 199999; j++) {
+    for (i = 0; i < 99999; i++)
+        for (j = 0; j < 29999; j++) {
             count++;
             if (count > 999999)
                 count = 0;
@@ -48,11 +48,11 @@ int main(int argc, char **argv)
     cpu = sched_getcpu();
     printf("on cpu %d\n", cpu);
 
-    diff = BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
-    printf("elapsed time = %llu nanoseconds\n", (long long unsigned int) diff);
+    diff = BILLION * (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1000000;
+    printf("elapsed time = %lu milliseconds\n", (long unsigned int) diff);
 
-    diff2 = BILLION * (cpu_end.tv_sec - cpu_start.tv_sec) + cpu_end.tv_nsec - cpu_start.tv_nsec;
-    printf("elapsed process CPU time = %llu nanoseconds\n", (long long unsigned int) diff2);
+    diff2 = BILLION * (cpu_end.tv_sec - cpu_start.tv_sec) + (cpu_end.tv_nsec - cpu_start.tv_nsec) / 1000000;
+    printf("elapsed process CPU time = %lu milliseconds\n", (long unsigned int) diff2);
     printf("cpu usage: %f\n\n", (double) diff2/diff);
 
     exit(0);

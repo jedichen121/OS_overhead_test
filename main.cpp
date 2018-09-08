@@ -36,7 +36,7 @@ int main(int argc, char **argv)
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &cpu_start);    /* mark start time */
 
     for (i = 0; i < 99999; i++)
-        for (j = 0; j < 29999; j++) {
+        for (j = 0; j < 59999; j++) {
             count++;
             if (count > 999999)
                 count = 0;
